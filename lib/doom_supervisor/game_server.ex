@@ -18,6 +18,7 @@ defmodule DoomSupervisor.GameServer do
   use GenServer
 
   @name __MODULE__
+  @prefix "**ELIXIR**"
 
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts, name: @name)
@@ -40,8 +41,15 @@ defmodule DoomSupervisor.GameServer do
   end
 
   @impl true
+  def handle_info({port, {:data, @prefix <> data}}, %{port: port} = state) do
+    Logger.info("************* #{data}")
+
+    {:noreply, state}
+  end
+
+  @impl true
   def handle_info({port, {:data, data}}, %{port: port} = state) do
-    Logger.info("Game--> #{inspect(data)}")
+    Logger.info(data)
 
     {:noreply, state}
   end

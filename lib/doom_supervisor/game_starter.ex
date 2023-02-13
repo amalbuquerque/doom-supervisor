@@ -17,7 +17,7 @@ defmodule DoomSupervisor.GameStarter do
     "-iwad",
     "DOOM2.wad",
     "-file",
-    ~s("/Users/andre/Library/Application Support/gzdoom/supervisor.wad"),
+    "/Users/andre/projs/personal/doom_supervisor/wads/supervisor.wad",
     "-nomonsters"
   ]
 
