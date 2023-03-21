@@ -7,10 +7,6 @@ config :doom_supervisor, DoomSupervisorWeb.Endpoint,
   secret_key_base: "VRPVIbMFwU2E1/Xd22YXglrElnc8IZ1wEQPgQz8whoFpZhbLExOoRVjRBcH1nwgB",
   server: false
 
-# In test we don't send emails.
-config :doom_supervisor, DoomSupervisor.Mailer,
-  adapter: Swoosh.Adapters.Test
-
 # Print only warnings and errors during test
 config :logger, level: :warn
 
