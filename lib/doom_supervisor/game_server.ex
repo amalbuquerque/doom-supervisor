@@ -5,7 +5,7 @@ defmodule DoomSupervisor.GameServer do
   Use it like:
 
   ```
-  {:ok, game_server} = DoomSupervisor.GameServer.start_link(nil)
+  {:ok, game_server} = DoomSupervisor.GameServer.start_link([])
   DoomSupervisor.GameServer.start_game()
   ```
   """
