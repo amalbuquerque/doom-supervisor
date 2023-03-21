@@ -44,6 +44,10 @@ defmodule DoomSupervisor.GameServer do
   def handle_info({port, {:data, @prefix <> data}}, %{port: port} = state) do
     Logger.info("************* #{data}")
 
+    state = data
+            |> String.trim()
+            |> handle_game_output(state)
+
     {:noreply, state}
   end
 
@@ -58,4 +62,15 @@ defmodule DoomSupervisor.GameServer do
   def handle_info(_, state) do
     {:noreply, state}
   end
+
+  # [info] *************  Elixir UDP port on: 6764
+  defp handle_game_output("Elixir UDP port on: " <> udp_port, state) do
+    {udp_port, _rest} = Integer.parse(udp_port)
+
+    Logger.info("Game is listening on port: #{udp_port}")
+
+    %{state | udp_port: udp_port}
+  end
+
+  defp handle_game_output(_output, state), do: state
 end

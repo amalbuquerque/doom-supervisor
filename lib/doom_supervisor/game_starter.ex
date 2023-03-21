@@ -22,7 +22,7 @@ defmodule DoomSupervisor.GameStarter do
   ]
 
   @doc """
-  Starts the Doom game and returns an `%IO.Stream{}` with the output of the game.
+  Starts the Doom game and returns a `port`.
 
   iex>
   DoomSupervisor.GameStarter.call()

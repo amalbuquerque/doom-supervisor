@@ -1,3 +1,3 @@
 defmodule DoomSupervisor.Game do
-  defstruct [:port]
+  defstruct [:port, :udp_port]
 end
