@@ -10,8 +10,10 @@ defmodule DoomSupervisor.GameServer do
   ```
   """
 
+  alias DoomSupervisor.Actions
   alias DoomSupervisor.Game
   alias DoomSupervisor.GameStarter
+  alias DoomSupervisor.Netevent
 
   require Logger
 
@@ -19,6 +21,7 @@ defmodule DoomSupervisor.GameServer do
 
   @name __MODULE__
   @prefix "**ELIXIR**"
+  @localhost "127.0.0.1"
 
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts, name: @name)
@@ -33,11 +36,29 @@ defmodule DoomSupervisor.GameServer do
     GenServer.call(@name, :start_game)
   end
 
+  @doc """
+  Spawns a monster.
+
+  DoomSupervisor.GameServer.spawn_monster(:cacodemon, "id123")
+  """
+  def spawn_monster(monster, identifier) do
+    payload = Actions.spawn_monster(monster, identifier)
+
+    GenServer.call(@name, {:send_netevent, payload})
+  end
+
   @impl true
   def handle_call(:start_game, _from, state) do
     port = GameStarter.call()
 
     {:reply, :ok, %{state | port: port}}
+  end
+
+  @impl true
+  def handle_call({:send_netevent, payload}, _from, %{udp_port: udp_port} = state) do
+    Netevent.send_netevent(payload, @localhost, udp_port)
+
+    {:reply, :ok, state}
   end
 
   @impl true

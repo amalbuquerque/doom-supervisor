@@ -1,6 +1,9 @@
 defmodule DoomSupervisor.Netevent do
   @moduledoc """
   Module that abstracts reading and sending ZDoom NetEvent payloads.
+
+  It does the low-level communication with the game through an UDP port
+  opened beforehand.
   """
 
   alias DoomSupervisor.Zlib
@@ -101,7 +104,8 @@ defmodule DoomSupervisor.Netevent do
   The `send_netevent/3` function below is currently spawning a cacodemon.
 
   ```
-  iex(14)> DoomSupervisor.Netevent.send_netevent("abigmonsterohno:123:456:pid.1.2.3\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", "127.0.0.1", 6679)
+  udp_port = 6770
+  DoomSupervisor.Netevent.send_netevent("abigmonsterohno:123:456:pid.1.2.3\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", "127.0.0.1", udp_port)
   ```
   """
   def send_netevent(payload, host_ip, port) when is_integer(port) do
