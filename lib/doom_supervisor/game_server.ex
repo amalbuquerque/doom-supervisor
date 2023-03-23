@@ -40,6 +40,10 @@ defmodule DoomSupervisor.GameServer do
   Spawns a monster.
 
   DoomSupervisor.GameServer.spawn_monster(:cacodemon, "id123")
+  DoomSupervisor.GameServer.spawn_monster(:imp, "id456")
+  DoomSupervisor.GameServer.spawn_monster(:soldier, "id456")
+  DoomSupervisor.GameServer.spawn_monster(:mancubus, "id456")
+  DoomSupervisor.GameServer.spawn_monster(:hell_knight, "id456")
   """
   def spawn_monster(monster, identifier) do
     payload = Actions.spawn_monster(monster, identifier)

@@ -5,17 +5,27 @@ defmodule DoomSupervisor.Actions do
   Valid messages:
     - Spawning a monster;
     - Killing a monster.
+
+  Check monsters list here: https://zdoom.org/wiki/Classes:Doom
   """
 
   @padding "\0"
   @payload_length 50
 
-  @allowed_monsters [
-    :cacodemon
+  @monsters [
+    cacodemon: "Cacodemon",
+    demon: "Demon",
+    imp: "DoomImp",
+    cyberdemon: "Cyberdemon",
+    soldier: "ZombieMan",
+    mancubus: "Fatso",
+    hell_knight: "HellKnight"
   ]
 
+  @allowed_monsters Keyword.keys(@monsters)
+
   def spawn_monster(monster, identifier) when monster in @allowed_monsters do
-    build_payload("spawn", monster, identifier)
+    build_payload("spawn", Keyword.fetch!(@monsters, monster), identifier)
   end
 
   def build_payload(action, monster, identifier) do
