@@ -41,7 +41,8 @@ defmodule DoomSupervisor.GameServer do
 
   DoomSupervisor.GameServer.spawn_monster(:cacodemon, "id123")
   DoomSupervisor.GameServer.spawn_monster(:imp, "id456")
-  DoomSupervisor.GameServer.spawn_monster(:soldier, "id456")
+  DoomSupervisor.GameServer.spawn_monster(:zombie_man, "id456")
+  DoomSupervisor.GameServer.spawn_monster(:elixir_zombie_man, "id456")
   DoomSupervisor.GameServer.spawn_monster(:mancubus, "id456")
   DoomSupervisor.GameServer.spawn_monster(:hell_knight, "id456")
   """
