@@ -1,0 +1,16 @@
+// copied the map MAP01 entry from gzdoom/wadsrc/static/mapinfo/doom2.txt
+ map MAP01 lookup "HUSTR_1"
+{
+    titlepatch = "CWILV00"
+    next = "MAP02"
+    secretnext = "MAP02"
+    sky1 = "SKY1"
+    cluster = 5
+    par = 30
+    music = "$MUSIC_RUNNIN"
+}
+
+gameinfo
+{
+    AddEventHandlers = "HelloWorldHandler", "MyNetEventHandler", "MySpawnMonsterEventHandler"
+}
