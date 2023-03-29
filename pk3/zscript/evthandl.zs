@@ -46,6 +46,6 @@ class MyThingDiedEventHandler : EventHandler
     {
         let monster = e.Thing;
 
-        Spawner.PushElixirMessage(monster.GetClassName(), monster.GetTag(), "died with handler", monster.Pos);
+        Spawner.PushElixirMessage(monster.GetClassName(), monster.GetTag(), "died", monster.Pos);
     }
 }

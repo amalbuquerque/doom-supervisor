@@ -5,7 +5,7 @@ class Spawner : Actor
         let monster = Actor.Spawn(monsterToSpawn, position, flags);
         monster.SetTag(pid);
 
-        console.printf("The tag I've set is %s", monster.GetTag());
+        console.printf("Tagged new %s as '%s'", monsterToSpawn, monster.GetTag());
 
         Spawner.PushElixirMessage(monsterToSpawn, pid, "spawned", position);
 
