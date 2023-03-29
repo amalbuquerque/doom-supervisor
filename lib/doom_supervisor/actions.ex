@@ -18,7 +18,6 @@ defmodule DoomSupervisor.Actions do
     imp: "DoomImp",
     cyberdemon: "Cyberdemon",
     zombie_man: "ZombieMan",
-    elixir_zombie_man: "ElixirZombieMan",
     mancubus: "Fatso",
     hell_knight: "HellKnight"
   ]

@@ -12,5 +12,5 @@
 
 gameinfo
 {
-    AddEventHandlers = "HelloWorldHandler", "MyNetEventHandler", "MySpawnMonsterEventHandler"
+    AddEventHandlers = "HelloWorldHandler", "MyNetEventHandler", "MySpawnMonsterEventHandler", "MyThingDiedEventHandler"
 }

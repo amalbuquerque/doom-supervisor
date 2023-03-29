@@ -1,55 +1,15 @@
-class ElixirZombieMan : ZombieMan
-{
-    string pid;
-    property pid : pid;
-
-    Default
-    {
-        ElixirZombieMan.pid "pid_unset"; // defines the default value for the variable
-    }
-
-    States
-    {
-    Death:
-        // TNT1 is an internal name for a null sprite with special handling (the actor’s rendering will be disabled when using this sprite).
-        TNT1 A 0
-        {
-            Spawner.PushElixirMessage(self.GetClassName(), pid, "died", pos);
-        }
-        goto super::Death;
-    }
-}
-
 class Spawner : Actor
 {
     static Actor SpawnWithPid(string monsterToSpawn, string pid, vector3 position, uint flags)
     {
-        array<string> monstersWithPid = {"ElixirCacodemon", "ElixirDemon", "ElixirDoomImp", "ElixirCyberdemon", "ElixirZombieMan", "ElixirFatso", "ElixirHellKnight"};
+        let monster = Actor.Spawn(monsterToSpawn, position, flags);
+        monster.SetTag(pid);
 
-        // array.Find() returns array.Size() if element not found
-        if (monstersWithPid.Find(monsterToSpawn) == monstersWithPid.Size())
-        {
-            console.printf("Spawning vanilla %s", monsterToSpawn);
+        console.printf("The tag I've set is %s", monster.GetTag());
 
-            return Spawn(monsterToSpawn, position, ALLOW_REPLACE);
-        }
+        Spawner.PushElixirMessage(monsterToSpawn, pid, "spawned", position);
 
-        Actor toReturn = null;
-
-        if (monsterToSpawn == "ElixirZombieMan")
-        {
-            let monster = ElixirZombieMan(Spawn(monsterToSpawn, position, flags));
-            monster.pid = pid;
-
-            toReturn = monster;
-        }
-
-        if (toReturn != null)
-        {
-            Spawner.PushElixirMessage(monsterToSpawn, pid, "spawned", position);
-        }
-
-        return toReturn;
+        return monster;
     }
 
     static void PushElixirMessage(string className, string pid, string event, vector3 position)

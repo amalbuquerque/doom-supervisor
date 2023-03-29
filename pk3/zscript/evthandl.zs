@@ -44,6 +44,8 @@ class MyThingDiedEventHandler : EventHandler
     // WorldEvent.Thing is an Actor
     override void WorldThingDied (WorldEvent e)
     {
+        let monster = e.Thing;
 
+        Spawner.PushElixirMessage(monster.GetClassName(), monster.GetTag(), "died with handler", monster.Pos);
     }
 }
