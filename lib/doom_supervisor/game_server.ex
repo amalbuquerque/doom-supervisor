@@ -53,6 +53,18 @@ defmodule DoomSupervisor.GameServer do
     GenServer.call(@name, {:send_netevent, payload})
   end
 
+  @doc """
+  Kills a monster by pid.
+
+  DoomSupervisor.GameServer.kill_monster_by_pid("id123")
+  DoomSupervisor.GameServer.kill_monster_by_pid("id456")
+  """
+  def kill_monster_by_pid(identifier) do
+    payload = Actions.kill_monster_by_identifier(identifier)
+
+    GenServer.call(@name, {:send_netevent, payload})
+  end
+
   @impl true
   def handle_call(:start_game, _from, state) do
     port = GameStarter.call()

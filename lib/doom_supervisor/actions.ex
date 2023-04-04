@@ -28,6 +28,10 @@ defmodule DoomSupervisor.Actions do
     build_payload("spawn", Keyword.fetch!(@monsters, monster), identifier)
   end
 
+  def kill_monster_by_identifier(identifier) do
+    build_payload("kill", "notUsed", identifier)
+  end
+
   def build_payload(action, monster, identifier) do
     [action, monster, identifier]
     |> Enum.join(":")
