@@ -18,23 +18,29 @@ class MyNetEventHandler : EventHandler
    }
 }
 
-class MySpawnMonsterEventHandler : EventHandler
+class MyNetworkEventHandler : EventHandler
 {
     // NetworkEvent handler
     override void NetworkProcess (ConsoleEvent e)
     {
-        // payload of the format spawn:cacodemon:id123
+        // payload has the format
+        // spawn:cacodemon:pid123
+        // kill:<process>:pid123
         string payload = e.Name;
         Array<String> actionMonsterPid;
         e.Name.Split(actionMonsterPid, ":");
-        string spawn = actionMonsterPid[0];
+        string actionToPerform = actionMonsterPid[0];
         string monster = actionMonsterPid[1];
         string pid = actionMonsterPid[2];
 
         let player = players [e.Player].mo;
         let position = player.Vec3Offset(FRandom(256,-256), FRandom(256,-256), 0);
 
-        Spawner.SpawnWithPid(monster, pid, position, ALLOW_REPLACE);
+        if (actionToPerform == "spawn") {
+            Spawner.SpawnWithPid(monster, pid, position, ALLOW_REPLACE);
+        } else if (actionToPerform == "kill") {
+            AllMonstersHandler.KillMonsterByPid(pid);
+        }
     }
 }
 
