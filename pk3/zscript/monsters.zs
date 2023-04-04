@@ -1,3 +1,44 @@
+class AllMonstersHandler : EventHandler
+{
+    array<Actor> g_allMonsters;
+
+    static void RegisterMonster(Actor monster)
+    {
+        let allMonstersHandler = AllMonstersHandler(EventHandler.Find("AllMonstersHandler"));
+
+        if (allMonstersHandler)
+        {
+            allMonstersHandler.g_allMonsters.Push(monster);
+            console.printf("AllMonstersHandler has %d monsters", allMonstersHandler.g_allMonsters.Size());
+        }
+    }
+
+    static Actor KillMonsterByPid(string pid)
+    {
+        let allMonstersHandler = AllMonstersHandler(EventHandler.Find("AllMonstersHandler"));
+
+        Actor monsterToKill = null;
+
+        if (allMonstersHandler)
+        {
+            for (int i = 0; i < allMonstersHandler.g_allMonsters.Size(); i++)
+            {
+                monsterToKill = allMonstersHandler.g_allMonsters[i];
+                // Double-check the pointer isn't null
+                if (monsterToKill && monsterToKill.GetTag() == pid)
+                {
+
+                    console.printf("Killing %s with %s ...", monsterToKill.GetClassName(), monsterToKill.GetTag());
+                    monsterToKill.A_Die();
+                    break;
+                }
+            }
+        }
+
+        return monsterToKill;
+    }
+}
+
 class Spawner : Actor
 {
     static Actor SpawnWithPid(string monsterToSpawn, string pid, vector3 position, uint flags)
@@ -8,6 +49,8 @@ class Spawner : Actor
         console.printf("Tagged new %s as '%s'", monsterToSpawn, monster.GetTag());
 
         Spawner.PushElixirMessage(monsterToSpawn, pid, "spawned", position);
+
+        AllMonstersHandler.RegisterMonster(monster);
 
         return monster;
     }
