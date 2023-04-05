@@ -57,9 +57,25 @@ class Helper : Actor
 
     static void GetPlayerPos()
     {
-        let player = players[0].mo;
+        let player = Helper.GetPlayer();
 
         PushElixirMessage("Player", "Supervisor", "getPos", player.Pos);
+    }
+
+    static Actor GetPlayer()
+    {
+        return players[0].mo;
+    }
+
+    static vector3 RandomPositionAroundPlayer(int range)
+    {
+        vector3 playerPosition = Helper.GetPlayer().Pos;
+        vector3 position;
+        position.X = playerPosition.X + FRandom(range, -range);
+        position.Y = playerPosition.Y + FRandom(range, -range);
+        position.Z = playerPosition.Z;
+
+        return position;
     }
 
     static void PushElixirMessage(string className, string pid, string event, vector3 position)

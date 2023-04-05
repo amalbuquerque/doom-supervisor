@@ -24,17 +24,21 @@ class MyNetworkEventHandler : EventHandler
     override void NetworkProcess (ConsoleEvent e)
     {
         // payload has the format
-        // spawn:cacodemon:pid123
-        // kill:<process>:pid123
+        // action:class:identifier:position
+        // Examples:
+        // spawn:cacodemon:pid123:notUsed
+        // kill:notUsed:pid123:notUsed
+        // get_pos:notUsed:notUsed:notUsed
         string payload = e.Name;
         Array<String> actionMonsterPid;
         e.Name.Split(actionMonsterPid, ":");
         string actionToPerform = actionMonsterPid[0];
         string monster = actionMonsterPid[1];
         string pid = actionMonsterPid[2];
+        // TODO: parse elixirPosition into vector3
+        string elixirPosition = actionMonsterPid[3];
 
-        let player = players[e.Player].mo;
-        let position = player.Vec3Offset(FRandom(256,-256), FRandom(256,-256), 0);
+        let position = Helper.RandomPositionAroundPlayer(256);
 
         if (actionToPerform == "spawn") {
             Helper.SpawnWithPid(monster, pid, position, ALLOW_REPLACE);
