@@ -48,6 +48,7 @@ class MyNetworkEventHandler : EventHandler
             Helper.SpawnWithPid(monster, pid, position, ALLOW_REPLACE);
         } else if (actionToPerform == "kill") {
             AllMonstersHandler.KillMonsterByPid(pid);
+
         } else if (actionToPerform == "get_pos") {
             Helper.GetPlayerPos();
         }

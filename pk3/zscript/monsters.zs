@@ -25,7 +25,7 @@ class AllMonstersHandler : EventHandler
             {
                 monsterToKill = allMonstersHandler.g_allMonsters[i];
                 // Double-check the pointer isn't null
-                if (monsterToKill && monsterToKill.GetTag() == pid)
+                if (monsterToKill && monsterToKill.GetTag() == pid && monsterToKill.Health >= 1)
                 {
 
                     console.printf("Killing %s with %s ...", monsterToKill.GetClassName(), monsterToKill.GetTag());
