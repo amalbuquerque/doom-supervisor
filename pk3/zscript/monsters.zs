@@ -78,6 +78,24 @@ class Helper : Actor
         return position;
     }
 
+    static vector3 PositionFromElixir(string elixirPosition)
+    {
+        // elixirPosition has format "(x,y,z)"
+        string toSplit = elixirPosition.Mid(1, elixirPosition.Length() - 2);
+        Array<String> stringCoordinates;
+        toSplit.Split(stringCoordinates, ",");
+        let x = stringCoordinates[0].ToInt();
+        let y = stringCoordinates[1].ToInt();
+        let z = stringCoordinates[2].ToInt();
+
+        vector3 toReturn;
+        toReturn.X = x;
+        toReturn.Y = y;
+        toReturn.Z = z;
+
+        return toReturn;
+    }
+
     static void PushElixirMessage(string className, string pid, string event, vector3 position)
     {
         console.printf("**ELIXIR** %s %s %s at (%d, %d, %d)", pid, className, event, position.X, position.Y, position.Z);

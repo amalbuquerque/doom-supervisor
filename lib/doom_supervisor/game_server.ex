@@ -14,6 +14,7 @@ defmodule DoomSupervisor.GameServer do
   """
 
   alias DoomSupervisor.Actions
+  alias DoomSupervisor.Actions.Position
   alias DoomSupervisor.Game
   alias DoomSupervisor.GameStarter
   alias DoomSupervisor.Netevent
@@ -40,7 +41,9 @@ defmodule DoomSupervisor.GameServer do
   end
 
   @doc """
-  Spawns a monster.
+  Spawns a monster near the player.
+
+  Note that it might be a wall position, not allowing the monster to move.
 
   DoomSupervisor.GameServer.spawn_monster(:cacodemon, "id123")
   DoomSupervisor.GameServer.spawn_monster(:imp, "id456")
@@ -74,6 +77,18 @@ defmodule DoomSupervisor.GameServer do
   """
   def get_player_position do
     payload = Actions.get_player_position()
+
+    GenServer.call(@name, {:send_netevent, payload})
+  end
+
+  @doc """
+  Spawns monster at a given position.
+
+  DoomSupervisor.GameServer.spawn_monster_at(:demon, "id123", {699, 752, 56})
+  """
+  def spawn_monster_at(monster, identifier, {_x, _y, _z} = position) do
+    position = Position.from_tuple(position)
+    payload = Actions.spawn_monster_at(monster, identifier, position)
 
     GenServer.call(@name, {:send_netevent, payload})
   end

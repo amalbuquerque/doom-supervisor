@@ -31,16 +31,20 @@ class MyNetworkEventHandler : EventHandler
         // get_pos:notUsed:notUsed:notUsed
         string payload = e.Name;
         Array<String> actionMonsterPid;
+
         e.Name.Split(actionMonsterPid, ":");
         string actionToPerform = actionMonsterPid[0];
         string monster = actionMonsterPid[1];
         string pid = actionMonsterPid[2];
-        // TODO: parse elixirPosition into vector3
         string elixirPosition = actionMonsterPid[3];
 
-        let position = Helper.RandomPositionAroundPlayer(256);
-
         if (actionToPerform == "spawn") {
+            let position = Helper.RandomPositionAroundPlayer(200);
+
+            Helper.SpawnWithPid(monster, pid, position, ALLOW_REPLACE);
+        } else if (actionToPerform == "spawn_at") {
+            let position = Helper.PositionFromElixir(elixirPosition);
+
             Helper.SpawnWithPid(monster, pid, position, ALLOW_REPLACE);
         } else if (actionToPerform == "kill") {
             AllMonstersHandler.KillMonsterByPid(pid);
