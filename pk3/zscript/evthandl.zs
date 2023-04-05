@@ -33,13 +33,15 @@ class MyNetworkEventHandler : EventHandler
         string monster = actionMonsterPid[1];
         string pid = actionMonsterPid[2];
 
-        let player = players [e.Player].mo;
+        let player = players[e.Player].mo;
         let position = player.Vec3Offset(FRandom(256,-256), FRandom(256,-256), 0);
 
         if (actionToPerform == "spawn") {
-            Spawner.SpawnWithPid(monster, pid, position, ALLOW_REPLACE);
+            Helper.SpawnWithPid(monster, pid, position, ALLOW_REPLACE);
         } else if (actionToPerform == "kill") {
             AllMonstersHandler.KillMonsterByPid(pid);
+        } else if (actionToPerform == "get_pos") {
+            Helper.GetPlayerPos();
         }
     }
 }
@@ -52,6 +54,6 @@ class MyThingDiedEventHandler : EventHandler
     {
         let monster = e.Thing;
 
-        Spawner.PushElixirMessage(monster.GetClassName(), monster.GetTag(), "died", monster.Pos);
+        Helper.PushElixirMessage(monster.GetClassName(), monster.GetTag(), "died", monster.Pos);
     }
 }

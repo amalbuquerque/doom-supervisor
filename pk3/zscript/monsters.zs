@@ -39,7 +39,7 @@ class AllMonstersHandler : EventHandler
     }
 }
 
-class Spawner : Actor
+class Helper : Actor
 {
     static Actor SpawnWithPid(string monsterToSpawn, string pid, vector3 position, uint flags)
     {
@@ -48,11 +48,18 @@ class Spawner : Actor
 
         console.printf("Tagged new %s as '%s'", monsterToSpawn, monster.GetTag());
 
-        Spawner.PushElixirMessage(monsterToSpawn, pid, "spawned", position);
+        Helper.PushElixirMessage(monsterToSpawn, pid, "spawned", position);
 
         AllMonstersHandler.RegisterMonster(monster);
 
         return monster;
+    }
+
+    static void GetPlayerPos()
+    {
+        let player = players[0].mo;
+
+        PushElixirMessage("Player", "Supervisor", "getPos", player.Pos);
     }
 
     static void PushElixirMessage(string className, string pid, string event, vector3 position)

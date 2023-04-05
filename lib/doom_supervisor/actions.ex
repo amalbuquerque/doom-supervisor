@@ -24,12 +24,18 @@ defmodule DoomSupervisor.Actions do
 
   @allowed_monsters Keyword.keys(@monsters)
 
+  @___ "notUsed"
+
   def spawn_monster(monster, identifier) when monster in @allowed_monsters do
     build_payload("spawn", Keyword.fetch!(@monsters, monster), identifier)
   end
 
   def kill_monster_by_identifier(identifier) do
-    build_payload("kill", "notUsed", identifier)
+    build_payload("kill", @___, identifier)
+  end
+
+  def get_player_position do
+    build_payload("get_pos", @___, @___)
   end
 
   def build_payload(action, monster, identifier) do

@@ -8,6 +8,7 @@ defmodule DoomSupervisor.GameServer do
   {:ok, game_server} = DoomSupervisor.GameServer.start_link([])
   DoomSupervisor.GameServer.start_game()
   DoomSupervisor.GameServer.spawn_monster(:zombie_man, "id456")
+  DoomSupervisor.GameServer.get_player_position()
   ```
   """
 
@@ -61,6 +62,17 @@ defmodule DoomSupervisor.GameServer do
   """
   def kill_monster_by_pid(identifier) do
     payload = Actions.kill_monster_by_identifier(identifier)
+
+    GenServer.call(@name, {:send_netevent, payload})
+  end
+
+  @doc """
+  Gets player position.
+
+  DoomSupervisor.GameServer.get_player_position()
+  """
+  def get_player_position do
+    payload = Actions.get_player_position()
 
     GenServer.call(@name, {:send_netevent, payload})
   end
