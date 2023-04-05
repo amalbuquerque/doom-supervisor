@@ -40,6 +40,7 @@ defmodule DoomSupervisor.Actions do
     imp: "DoomImp",
     cyberdemon: "Cyberdemon",
     zombie_man: "ZombieMan",
+    shotgun_guy: "ShotgunGuy",
     mancubus: "Fatso",
     hell_knight: "HellKnight"
   ]
