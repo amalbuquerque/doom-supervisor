@@ -6,10 +6,13 @@ defmodule DoomSupervisor.GameServer do
 
   ```
   {:ok, game_server} = DoomSupervisor.GameServer.start_link([])
+
   DoomSupervisor.GameServer.start_game()
+
   DoomSupervisor.GameServer.spawn_monster(:zombie_man, "id123")
   DoomSupervisor.GameServer.spawn_monster(:shotgun_guy, "id123")
   DoomSupervisor.GameServer.spawn_monster(:zombie_man, "id456")
+
   DoomSupervisor.GameServer.get_player_position()
   ```
   """
@@ -113,9 +116,10 @@ defmodule DoomSupervisor.GameServer do
   def handle_info({port, {:data, @prefix <> data}}, %{port: port} = state) do
     Logger.info("************* #{data}")
 
-    state = data
-            |> String.trim()
-            |> handle_game_output(state)
+    state =
+      data
+      |> String.trim()
+      |> handle_game_output(state)
 
     {:noreply, state}
   end
