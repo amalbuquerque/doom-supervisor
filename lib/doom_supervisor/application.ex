@@ -13,9 +13,8 @@ defmodule DoomSupervisor.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: DoomSupervisor.PubSub},
       # Start the Endpoint (http/https)
-      DoomSupervisorWeb.Endpoint
-      # Start a worker by calling: DoomSupervisor.Worker.start_link(arg)
-      # {DoomSupervisor.Worker, arg}
+      DoomSupervisorWeb.Endpoint,
+      {DoomSupervisor.GameServer, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

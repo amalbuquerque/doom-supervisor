@@ -86,6 +86,7 @@ defmodule DoomSupervisor.GameServer do
 
   DoomSupervisor.GameServer.spawn_monster_at(:demon, "id123", {699, 752, 56})
   DoomSupervisor.GameServer.spawn_monster_at(:demon, "id123", {747, 139, -32})
+  DoomSupervisor.GameServer.spawn_monster_at(:imp, "id123", {747, 139, -32})
   """
   def spawn_monster_at(monster, identifier, {_x, _y, _z} = position) do
     position = Position.from_tuple(position)
