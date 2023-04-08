@@ -5,6 +5,8 @@ defmodule DoomSupervisor.Application do
 
   use Application
 
+  @registry_name Application.compile_env(:doom_supervisor, :registry_name)
+
   @impl true
   def start(_type, _args) do
     children = [
@@ -14,7 +16,8 @@ defmodule DoomSupervisor.Application do
       {Phoenix.PubSub, name: DoomSupervisor.PubSub},
       # Start the Endpoint (http/https)
       DoomSupervisorWeb.Endpoint,
-      {DoomSupervisor.GameServer, []}
+      {DoomSupervisor.GameServer, []},
+      {Registry, [keys: :unique, name: @registry_name]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
