@@ -12,6 +12,14 @@ defmodule DoomSupervisor.Supervision.Registry do
   def register_name(name, pid) do
     Logger.info("Registering #{inspect(pid)} as #{inspect(name)}...")
 
+    case name do
+      {monster, supervised_number} when is_integer(supervised_number) ->
+        DoomSupervisor.GameServer.spawn_supervised_monster(monster, supervised_number, pid)
+
+      {monster, _unique_id} ->
+        DoomSupervisor.GameServer.spawn_monster(monster, pid)
+    end
+
     Registry.register_name({@registry_name, name}, pid)
   end
 

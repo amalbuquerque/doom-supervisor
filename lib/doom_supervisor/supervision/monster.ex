@@ -11,13 +11,13 @@ defmodule DoomSupervisor.Supervision.Monster do
   Use it like:
 
   ```
-  {:ok, pid} = DoomSupervisor.Supervision.Monster.start_link("monster1")
+  {:ok, pid} = DoomSupervisor.Supervision.Monster.start_link({:demon, 1})
 
-  ^pid = DoomSupervisor.Supervision.Registry.whereis_name("monster1")
+  ^pid = DoomSupervisor.Supervision.Registry.whereis_name({:demon, 1})
 
-  :ok = DoomSupervisor.Supervision.Monster.kill("monster1", :normal)
+  :ok = DoomSupervisor.Supervision.Monster.kill({:demon, 1}, :normal)
 
-  :undefined = DoomSupervisor.Supervision.Registry.whereis_name("monster1")
+  :undefined = DoomSupervisor.Supervision.Registry.whereis_name({:demon, 1})
   ```
   """
 

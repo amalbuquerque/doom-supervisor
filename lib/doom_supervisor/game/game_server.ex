@@ -98,15 +98,41 @@ defmodule DoomSupervisor.GameServer do
     GenServer.call(@name, {:send_netevent, payload})
   end
 
+  @doc """
+  Spawns a supervised monster to illustrate a given supervision strategy.
+
+  Depending on the monster number, it will spawn a monster on the corresponding map position.
+
+  Use it like this:
+
+  ```
+  DoomSupervisor.GameServer.spawn_supervised_monster(:demon, 3, "pid3")
+  ```
+  """
+  def spawn_supervised_monster(monster, number, identifier) when number in 1..8 do
+    position = supervised_position(number)
+
+    Logger.info(
+      "Spawning supervised #{monster} no.#{number}, identifier=#{inspect(identifier)}..."
+    )
+
+    spawn_monster_at(monster, inspect(identifier), position)
+  end
+
   @impl true
   def handle_call(:start_game, _from, state) do
     port = GameStarter.call()
 
-    {:reply, :ok, %{state | port: port}}
+    {:reply, :ok, %{state | port: port, started: true}}
   end
 
   @impl true
-  def handle_call({:send_netevent, payload}, _from, %{udp_port: udp_port} = state) do
+  def handle_call({:send_netevent, _payload}, _from, %{started: false} = state) do
+    {:reply, :ok, state}
+  end
+
+  @impl true
+  def handle_call({:send_netevent, payload}, _from, %{started: true, udp_port: udp_port} = state) do
     Netevent.send_netevent(payload, @localhost, udp_port)
 
     {:reply, :ok, state}
@@ -146,4 +172,11 @@ defmodule DoomSupervisor.GameServer do
   end
 
   defp handle_game_output(_output, state), do: state
+
+  defp supervised_position(number) do
+    x_step = 100
+    x_offset = (number - 1) * x_step
+
+    {1050 - x_offset, -199, -32}
+  end
 end
