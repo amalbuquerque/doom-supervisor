@@ -122,6 +122,10 @@ defmodule DoomSupervisor.GameServer do
     spawn_monster_at(monster, inspect(identifier), position)
   end
 
+  def track_process(pid) do
+    GenServer.call(@name, {:track_process, pid})
+  end
+
   @impl true
   def handle_call(:start_game, _from, state) do
     port = GameStarter.call()
@@ -139,6 +143,32 @@ defmodule DoomSupervisor.GameServer do
     Netevent.send_netevent(payload, @localhost, udp_port)
 
     {:reply, :ok, state}
+  end
+
+  @doc """
+  Tracking processes once they are registered so that we know once they are killed.
+
+  Check the {:DOWN, ...} handler below.
+  """
+  @impl true
+  def handle_call({:track_process, pid}, _from, state) do
+    Process.monitor(pid)
+
+    {:reply, :ok, state}
+  end
+
+  @impl true
+  def handle_info({:DOWN, _ref, :process, pid, reason}, state) do
+    Logger.info(
+      "Process #{inspect(pid)} died due to #{reason}. Killing the corresponding monster..."
+    )
+
+    pid
+    |> inspect()
+    |> Actions.kill_monster_by_identifier()
+    |> Netevent.send_netevent(@localhost, state.udp_port)
+
+    {:noreply, state}
   end
 
   @impl true

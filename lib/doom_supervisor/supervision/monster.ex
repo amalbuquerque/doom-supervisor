@@ -38,7 +38,13 @@ defmodule DoomSupervisor.Supervision.Monster do
     {:ok, []}
   end
 
-  def kill(process_name, reason \\ :brutal_kill) do
+  def kill(pid_or_process_name, reason \\ :brutal_kill)
+
+  def kill(pid, reason) when is_pid(pid) do
+    GenServer.stop(pid, reason)
+  end
+
+  def kill(process_name, reason) do
     process_name
     |> via_tuple()
     |> GenServer.stop(reason)

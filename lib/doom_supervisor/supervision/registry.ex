@@ -3,7 +3,17 @@ defmodule DoomSupervisor.Supervision.Registry do
   Wrapper around Registry that we use to know when:
   - A process was spawned (since its name was registered)
   - A process was killed (since its name was unregistered)
+
+  Use it like this:
+  ```
+  pid = DoomSupervisor.Supervision.Registry.whereis_name({:demon, 2})
+
+  DoomSupervisor.Supervision.Monster.kill({:demon, 2})
+  DoomSupervisor.Supervision.Monster.kill({:demon, 2}, :normal)
+  ```
   """
+
+  alias DoomSupervisor.GameServer
 
   require Logger
 
@@ -14,12 +24,13 @@ defmodule DoomSupervisor.Supervision.Registry do
 
     case name do
       {monster, supervised_number} when is_integer(supervised_number) ->
-        DoomSupervisor.GameServer.spawn_supervised_monster(monster, supervised_number, pid)
+        GameServer.spawn_supervised_monster(monster, supervised_number, pid)
 
       {monster, _unique_id} ->
-        DoomSupervisor.GameServer.spawn_monster(monster, pid)
+        GameServer.spawn_monster(monster, pid)
     end
 
+    GameServer.track_process(pid)
     Registry.register_name({@registry_name, name}, pid)
   end
 
