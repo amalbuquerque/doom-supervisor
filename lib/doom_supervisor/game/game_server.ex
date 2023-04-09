@@ -106,7 +106,10 @@ defmodule DoomSupervisor.GameServer do
   Use it like this:
 
   ```
+  DoomSupervisor.GameServer.spawn_supervised_monster(:demon, 8, "pid8")
   DoomSupervisor.GameServer.spawn_supervised_monster(:demon, 3, "pid3")
+  DoomSupervisor.GameServer.spawn_supervised_monster(:cacodemon, 2, "pid2")
+  DoomSupervisor.GameServer.spawn_supervised_monster(:zombie_man, 1, "pid1")
   ```
   """
   def spawn_supervised_monster(monster, number, identifier) when number in 1..8 do
