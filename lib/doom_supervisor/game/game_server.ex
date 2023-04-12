@@ -13,6 +13,8 @@ defmodule DoomSupervisor.GameServer do
   DoomSupervisor.GameServer.spawn_monster(:shotgun_guy, "id123")
   DoomSupervisor.GameServer.spawn_monster(:zombie_man, "id456")
 
+  {:ok, supervisor} = DoomSupervisor.Supervision.Supervisor.start_link(:demon, 8, :one_for_one)
+
   DoomSupervisor.GameServer.get_player_position()
   ```
   """
@@ -22,6 +24,7 @@ defmodule DoomSupervisor.GameServer do
   alias DoomSupervisor.Game
   alias DoomSupervisor.GameStarter
   alias DoomSupervisor.Netevent
+  alias DoomSupervisor.Supervision.Monster
 
   require Logger
 
@@ -157,6 +160,16 @@ defmodule DoomSupervisor.GameServer do
     {:reply, :ok, state}
   end
 
+  @doc """
+  :DOWN handler for processes/monsters that were killed in game.pid()
+
+  Since they were killed in game, we don't need to kill them there again and we simple NOOP.
+  """
+  @impl true
+  def handle_info({:DOWN, _ref, :process, _pid, :killed_in_game}, state) do
+    {:noreply, state}
+  end
+
   @impl true
   def handle_info({:DOWN, _ref, :process, pid, reason}, state) do
     Logger.info(
@@ -204,6 +217,27 @@ defmodule DoomSupervisor.GameServer do
     %{state | udp_port: udp_port}
   end
 
+  # [info] *************  #PID<0.514.0> Demon died/spawned at (950, -199, -32)
+  defp handle_game_output("#PID<" <> _rest = payload, state) do
+    [string_pid, monster, event | _] = String.split(payload, " ")
+
+    IO.puts(" ************ #{string_pid}")
+    IO.puts(" ************ #{monster}")
+    IO.puts(" ************ #{event}")
+
+    case event do
+      "died" ->
+        pid = pid_from_string(string_pid)
+
+        Monster.kill(pid, :killed_in_game)
+
+      _ ->
+        :noop
+    end
+
+    state
+  end
+
   defp handle_game_output(_output, state), do: state
 
   defp supervised_position(number) do
@@ -211,5 +245,13 @@ defmodule DoomSupervisor.GameServer do
     x_offset = (number - 1) * x_step
 
     {1050 - x_offset, -199, -32}
+  end
+
+  # turns "#PID<0.514.0>" string into correct PID
+  defp pid_from_string("#PID" <> wrapped_pid = _string_pid) do
+    wrapped_pid
+    |> String.trim_leading("<")
+    |> String.trim_trailing(">")
+    |> IEx.Helpers.pid()
   end
 end
