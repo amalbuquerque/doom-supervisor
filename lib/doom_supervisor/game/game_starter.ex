@@ -26,12 +26,25 @@ defmodule DoomSupervisor.GameStarter do
   @doc """
   Starts the Doom game and returns a `port`.
 
-  iex>
-  DoomSupervisor.GameStarter.call()
+  iex> DoomSupervisor.GameStarter.call(keep_corpses: true)
+
+  iex> DoomSupervisor.GameStarter.call(keep_corpses: false)
   """
-  @spec call() :: port()
-  def call do
-    Port.open({:spawn_executable, @game_binary_path}, [:binary, args: @game_params])
+  @spec call(Keyword.t()) :: port()
+  def call(opts) do
+    game_params =
+      case Keyword.get(opts, :keep_corpses, false) do
+        true ->
+          @game_params
+
+        _ ->
+          nil
+
+          @game_params ++
+            ["-file", "/Users/andre/projs/personal/doom_supervisor/wads/fading_corpses.wad"]
+      end
+
+    Port.open({:spawn_executable, @game_binary_path}, [:binary, args: game_params])
   end
 
   def receive_stuff(port) do

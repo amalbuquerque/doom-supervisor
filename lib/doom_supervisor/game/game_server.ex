@@ -10,6 +10,7 @@ defmodule DoomSupervisor.GameServer do
   {:ok, game_server} = DoomSupervisor.GameServer.start_link([])
 
   DoomSupervisor.GameServer.start_game()
+  DoomSupervisor.GameServer.start_game(keep_corpses: true)
 
   DoomSupervisor.GameServer.spawn_monster(:zombie_man, "id123")
   DoomSupervisor.GameServer.spawn_monster(:shotgun_guy, "id123")
@@ -52,8 +53,8 @@ defmodule DoomSupervisor.GameServer do
     {:ok, %Game{}}
   end
 
-  def start_game do
-    GenServer.call(@name, :start_game)
+  def start_game(opts \\ []) do
+    GenServer.call(@name, {:start_game, opts})
   end
 
   @doc """
@@ -139,8 +140,8 @@ defmodule DoomSupervisor.GameServer do
   end
 
   @impl true
-  def handle_call(:start_game, _from, state) do
-    port = GameStarter.call()
+  def handle_call({:start_game, opts}, _from, state) do
+    port = GameStarter.call(opts)
 
     {:reply, :ok, %{state | port: port, started: true}}
   end
