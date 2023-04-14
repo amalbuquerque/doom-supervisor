@@ -12,6 +12,8 @@ defmodule DoomSupervisor.GameStarter do
     "1",
     "+sv_cheats",
     "1",
+    "+vid_fullscreen",
+    "0",
     "-warp",
     "01",
     "-iwad",
