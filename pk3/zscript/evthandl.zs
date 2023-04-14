@@ -46,6 +46,7 @@ class MyNetworkEventHandler : EventHandler
             let position = Helper.PositionFromElixir(elixirPosition);
 
             let monster = Helper.SpawnWithPid(monster, pid, position, ALLOW_REPLACE);
+
             monster.A_SetSpeed(0);
         } else if (actionToPerform == "kill") {
             AllMonstersHandler.KillMonsterByPid(pid);

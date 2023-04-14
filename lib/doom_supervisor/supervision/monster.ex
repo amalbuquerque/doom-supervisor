@@ -33,7 +33,8 @@ defmodule DoomSupervisor.Supervision.Monster do
 
   @impl true
   def init(name) do
-    Logger.info("Starting monster #{inspect(name)}")
+    Logger.info("Starting monster #{inspect(name)}...")
+    Process.sleep(500)
 
     {:ok, []}
   end

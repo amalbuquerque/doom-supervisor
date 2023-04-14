@@ -2,6 +2,8 @@ defmodule DoomSupervisor.GameServer do
   @moduledoc """
   GenServer responsible to manage the game port and interact with it.
 
+  Remember, to reset the map, you can use `changemap *` within the game's console.
+
   Use it like:
 
   ```
@@ -14,6 +16,12 @@ defmodule DoomSupervisor.GameServer do
   DoomSupervisor.GameServer.spawn_monster(:zombie_man, "id456")
 
   {:ok, supervisor} = DoomSupervisor.Supervision.Supervisor.start_link(:demon, 8, :one_for_one)
+  {:ok, supervisor} = DoomSupervisor.Supervision.Supervisor.start_link(:demon, 8, :one_for_all)
+  Supervisor.stop(supervisor, :shutdown)
+
+  all_monster_pids = for i <- 1..8, do: DoomSupervisor.Supervision.Registry.whereis_name({:demon, i}) |> inspect()
+
+  Enum.each(all_monster_pids, &DoomSupervisor.GameServer.kill_monster_by_pid/1)
 
   DoomSupervisor.GameServer.get_player_position()
   ```
@@ -219,20 +227,12 @@ defmodule DoomSupervisor.GameServer do
 
   # [info] *************  #PID<0.514.0> Demon died/spawned at (950, -199, -32)
   defp handle_game_output("#PID<" <> _rest = payload, state) do
-    [string_pid, monster, event | _] = String.split(payload, " ")
+    [string_pid, _monster, event | _] = String.split(payload, " ")
 
-    IO.puts(" ************ #{string_pid}")
-    IO.puts(" ************ #{monster}")
-    IO.puts(" ************ #{event}")
-
-    case event do
-      "died" ->
-        pid = pid_from_string(string_pid)
-
-        Monster.kill(pid, :killed_in_game)
-
-      _ ->
-        :noop
+    with "died" <- event,
+         pid = pid_from_string(string_pid),
+         true <- Process.alive?(pid) do
+      Monster.kill(pid, :killed_in_game)
     end
 
     state
