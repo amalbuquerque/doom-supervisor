@@ -14,6 +14,8 @@ defmodule DoomSupervisor.GameStarter do
     "1",
     "+vid_fullscreen",
     "0",
+    "+vid_activeinbackground",
+    "1",
     "-warp",
     "01",
     "-iwad",

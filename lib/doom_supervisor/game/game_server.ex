@@ -19,11 +19,11 @@ defmodule DoomSupervisor.GameServer do
   {:ok, supervisor} = DoomSupervisor.Supervision.Supervisor.start_link(:demon, 8, :one_for_one)
   {:ok, supervisor} = DoomSupervisor.Supervision.Supervisor.start_link(:demon, 8, :one_for_all)
   {:ok, supervisor} = DoomSupervisor.Supervision.Supervisor.start_link(:demon, 8, :rest_for_one)
+
   Supervisor.stop(supervisor, :shutdown)
 
-  all_monster_pids = for i <- 1..8, do: DoomSupervisor.Supervision.Registry.whereis_name({:demon, i}) |> inspect()
-
-  Enum.each(all_monster_pids, &DoomSupervisor.GameServer.kill_monster_by_pid/1)
+  monster = DoomSupervisor.Supervision.Registry.whereis_name({:demon, 4}) |> inspect()
+  DoomSupervisor.GameServer.kill_monster_by_pid(monster)
 
   DoomSupervisor.GameServer.get_player_position()
   ```
