@@ -49,18 +49,31 @@ defmodule DoomSupervisor.Actions do
 
   @___ "notUsed"
 
+  @doc """
+  Returns something like: `"spawn:cacodemon:pid123:notUsed"`
+  """
   def spawn_monster(monster, identifier) when monster in @allowed_monsters do
     build_payload("spawn", Keyword.fetch!(@monsters, monster), identifier, @___)
   end
 
-  def spawn_monster_at(monster, identifier, %Position{} = position) when monster in @allowed_monsters do
+  @doc """
+  Returns something like: `"spawn_at:demon:pid456:(x,y,z)"`
+  """
+  def spawn_monster_at(monster, identifier, %Position{} = position)
+      when monster in @allowed_monsters do
     build_payload("spawn_at", Keyword.fetch!(@monsters, monster), identifier, position)
   end
 
+  @doc """
+  Returns something like: `"kill:notUsed:pid789:notUsed"`
+  """
   def kill_monster_by_identifier(identifier) do
     build_payload("kill", @___, identifier, @___)
   end
 
+  @doc """
+  Returns something like: `"get_pos:notUsed:notUsed:notUsed"`
+  """
   def get_player_position do
     build_payload("get_pos", @___, @___, @___)
   end
