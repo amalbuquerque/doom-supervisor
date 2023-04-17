@@ -68,8 +68,8 @@ defmodule DoomSupervisor.GameServer do
   DoomSupervisor.GameServer.spawn_monster(:mancubus, "id456")
   DoomSupervisor.GameServer.spawn_monster(:hell_knight, "id456")
   """
-  def spawn_monster(monster, identifier) do
-    payload = Actions.spawn_monster(monster, identifier)
+  def spawn_monster(monster, identifier) when is_pid(identifier) do
+    payload = Actions.spawn_monster(monster, inspect(identifier))
 
     GenServer.call(@name, {:send_netevent, payload})
   end

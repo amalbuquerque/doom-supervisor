@@ -85,4 +85,6 @@ defmodule DoomSupervisor.Actions do
     |> Enum.join(":")
     |> String.pad_trailing(@payload_length, @padding)
   end
+
+  def allowed_monsters, do: @allowed_monsters
 end

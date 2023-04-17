@@ -8,6 +8,7 @@ defmodule DoomSupervisorWeb.Router do
     plug :put_root_layout, {DoomSupervisorWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug DoomSupervisorWeb.CurrentUser
   end
 
   pipeline :api do
@@ -40,5 +41,11 @@ defmodule DoomSupervisorWeb.Router do
 
       live_dashboard "/dashboard", metrics: DoomSupervisorWeb.Telemetry
     end
+  end
+
+  scope "/", DoomSupervisorWeb do
+    pipe_through :browser
+
+    live "/dynamic_supervisor", DynamicControlLive
   end
 end
