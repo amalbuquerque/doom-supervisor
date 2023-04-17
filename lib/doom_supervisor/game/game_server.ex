@@ -85,6 +85,8 @@ defmodule DoomSupervisor.GameServer do
   DoomSupervisor.GameServer.kill_monster_by_pid("id123")
   DoomSupervisor.GameServer.kill_monster_by_pid("id456")
   """
+  def kill_monster_by_pid(pid) when is_pid(pid), do: kill_monster_by_pid(inspect(pid))
+
   def kill_monster_by_pid(identifier) do
     payload = Actions.kill_monster_by_identifier(identifier)
 

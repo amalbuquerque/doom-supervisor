@@ -1,6 +1,7 @@
 defmodule DoomSupervisorWeb.DynamicControlLive do
   use DoomSupervisorWeb, :live_view
 
+  alias DoomSupervisor.GameServer
   alias DoomSupervisor.Supervision.DynamicControl
 
   require Logger
@@ -18,17 +19,38 @@ defmodule DoomSupervisorWeb.DynamicControlLive do
     {:ok, socket}
   end
 
-  def handle_event("spawn_demon", _value, socket) do
-    # socket.assigns.user_id
+  def handle_event("spawn_demon", _value, %{assigns: %{can_spawn: true}} = socket) do
+    {:ok, pid} = DynamicControl.dynamic_spawn(:demon, socket.assigns.user_id)
 
-    # TODO: Start dynamically-supervised monster
+    Process.monitor(pid)
 
-    {:noreply, assign(socket, :can_spawn, false)}
+    socket =
+      socket
+      |> assign(:monster, pid)
+      |> assign(:can_spawn, false)
+
+    {:noreply, socket}
   end
 
-  def handle_event("kill_own_monster", _value, socket) do
-    # TODO: Kill the monster
+  def handle_event("spawn_demon", _value, socket), do: {:noreply, socket}
 
-    {:noreply, assign(socket, :can_spawn, true)}
+  def handle_event("kill_own_monster", _value, %{assigns: %{monster: pid}} = socket)
+      when is_pid(pid) do
+    GameServer.kill_monster_by_pid(pid)
+
+    # no need to change the socket state
+    # let's allow the :DOWN handler to do that
+    {:noreply, socket}
+  end
+
+  def handle_event("kill_own_monster", _value, socket), do: {:noreply, socket}
+
+  def handle_info({:DOWN, _ref, :process, _pid, :killed_in_game}, socket) do
+    socket =
+      socket
+      |> assign(:monster, nil)
+      |> assign(:can_spawn, true)
+
+    {:noreply, socket}
   end
 end
