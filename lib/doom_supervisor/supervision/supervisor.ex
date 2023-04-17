@@ -35,7 +35,7 @@ defmodule DoomSupervisor.Supervision.Supervisor do
         monster_child_spec(monster_name)
       end
 
-    Supervisor.init(children, strategy: strategy)
+    Supervisor.init(children, strategy: strategy, max_restarts: 9999, max_seconds: 10)
   end
 
   @doc """
