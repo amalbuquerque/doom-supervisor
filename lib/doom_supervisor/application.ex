@@ -17,7 +17,8 @@ defmodule DoomSupervisor.Application do
       # Start the Endpoint (http/https)
       DoomSupervisorWeb.Endpoint,
       {DoomSupervisor.GameServer, []},
-      {Registry, [keys: :unique, name: @registry_name]}
+      {Registry, [keys: :unique, name: @registry_name]},
+      {DynamicSupervisor, strategy: :one_for_one, name: DoomSupervisor.DynamicSupervisor}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

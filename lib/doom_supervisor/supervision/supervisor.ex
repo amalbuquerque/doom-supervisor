@@ -32,10 +32,22 @@ defmodule DoomSupervisor.Supervision.Supervisor do
       for i <- 1..how_many do
         monster_name = {monster, i}
 
-        Supervisor.child_spec({Monster, monster_name}, id: supervision_id(monster_name))
+        monster_child_spec(monster_name)
       end
 
     Supervisor.init(children, strategy: strategy)
+  end
+
+  @doc """
+  Gets monster child spec.
+
+  Use it like:
+  ```
+  DoomSupervisor.Supervision.Supervisor.child_spec({:zombie_man, "abc_user_id"})
+  ```
+  """
+  def monster_child_spec({_monster, _identifier} = monster_name) do
+    Supervisor.child_spec({Monster, monster_name}, id: supervision_id(monster_name))
   end
 
   defp process_name(monster, strategy) do

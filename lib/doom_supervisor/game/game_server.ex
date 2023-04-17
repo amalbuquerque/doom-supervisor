@@ -16,14 +16,17 @@ defmodule DoomSupervisor.GameServer do
   DoomSupervisor.GameServer.spawn_monster(:shotgun_guy, "id123")
   DoomSupervisor.GameServer.spawn_monster(:zombie_man, "id456")
 
-  {:ok, supervisor} = DoomSupervisor.Supervision.Supervisor.start_link(:demon, 8, :one_for_one)
-  {:ok, supervisor} = DoomSupervisor.Supervision.Supervisor.start_link(:demon, 8, :one_for_all)
-  {:ok, supervisor} = DoomSupervisor.Supervision.Supervisor.start_link(:demon, 8, :rest_for_one)
+  {:ok, supervisor} = DoomSupervisor.Supervision.Supervisor.start_link(:demon, 5, :one_for_one)
+  {:ok, supervisor} = DoomSupervisor.Supervision.Supervisor.start_link(:demon, 5, :one_for_all)
+  {:ok, supervisor} = DoomSupervisor.Supervision.Supervisor.start_link(:demon, 5, :rest_for_one)
 
   Supervisor.stop(supervisor, :shutdown)
 
   monster = DoomSupervisor.Supervision.Registry.whereis_name({:demon, 4}) |> inspect()
   DoomSupervisor.GameServer.kill_monster_by_pid(monster)
+
+  DoomSupervisor.Supervision.DynamicControl.dynamic_spawn(:demon, "myuserid")
+  DoomSupervisor.Supervision.DynamicControl.monster_pid("myuserid")
 
   DoomSupervisor.GameServer.get_player_position()
   ```
@@ -68,8 +71,10 @@ defmodule DoomSupervisor.GameServer do
   DoomSupervisor.GameServer.spawn_monster(:mancubus, "id456")
   DoomSupervisor.GameServer.spawn_monster(:hell_knight, "id456")
   """
-  def spawn_monster(monster, identifier) when is_pid(identifier) do
-    payload = Actions.spawn_monster(monster, inspect(identifier))
+  def spawn_monster(monster, pid) when is_pid(pid), do: spawn_monster(monster, inspect(pid))
+
+  def spawn_monster(monster, identifier) do
+    payload = Actions.spawn_monster(monster, identifier)
 
     GenServer.call(@name, {:send_netevent, payload})
   end
