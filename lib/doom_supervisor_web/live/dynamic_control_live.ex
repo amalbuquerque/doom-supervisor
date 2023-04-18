@@ -19,8 +19,10 @@ defmodule DoomSupervisorWeb.DynamicControlLive do
     {:ok, socket}
   end
 
-  def handle_event("spawn_demon", _value, %{assigns: %{can_spawn: true}} = socket) do
-    {:ok, pid} = DynamicControl.dynamic_spawn(:demon, socket.assigns.user_id)
+  def handle_event("spawn_" <> monster, _value, %{assigns: %{can_spawn: true}} = socket) do
+    monster_class = String.to_existing_atom(monster)
+
+    {:ok, pid} = DynamicControl.dynamic_spawn(monster_class, socket.assigns.user_id)
 
     Process.monitor(pid)
 

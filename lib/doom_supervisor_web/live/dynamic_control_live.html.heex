@@ -1,7 +1,18 @@
 <div>
   <h2>User <%= @user_id %></h2>
-  <p>Can spawn: <%= @can_spawn %></p>
+  <p>Can spawn: <%= if @can_spawn, do: "✅", else: "❌" %></p>
 
-  <button phx-click="spawn_demon">Demon</button>
-  <button phx-click="kill_own_monster">Kill own monster</button>
+  <div>
+    <button phx-click="spawn_demon">Demon</button>
+    <button phx-click="spawn_zombie_man">Zombie Man</button>
+    <button phx-click="spawn_shotgun_guy">Shotgun guy</button>
+    <button phx-click="spawn_cacodemon">Cacodemon</button>
+    <button phx-click="spawn_imp">Imp</button>
+    <button phx-click="spawn_cyberdemon">Cyberdemon</button>
+    <button phx-click="spawn_mancubus">Mancubus</button>
+    <button phx-click="spawn_hell_knight">Hell Knight</button>
+  </div>
+  <div>
+    <button phx-click="kill_own_monster">Kill own monster</button>
+  </div>
 </div>
