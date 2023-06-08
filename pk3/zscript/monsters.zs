@@ -71,10 +71,12 @@ class Helper : Actor
     {
         vector3 playerPosition = Helper.GetPlayer().Pos;
         vector3 position;
-        position.X = playerPosition.X + FRandom(range, -range);
-        position.Y = playerPosition.Y + FRandom(range, -range);
-        position.Z = playerPosition.Z;
-
+        // position.X = playerPosition.X + FRandom(range, -range);
+        // position.Y = playerPosition.Y + FRandom(range, -range);
+        // position.Z = playerPosition.Z;
+        position.X = 2088 + FRandom(range, -range);
+        position.Y = -3461 + FRandom(range, -range);
+        position.Z = -52;
         return position;
     }
 
@@ -92,6 +94,12 @@ class Helper : Actor
         toReturn.X = x;
         toReturn.Y = y;
         toReturn.Z = z;
+
+        let range = 200;
+        toReturn.X = 2088 + FRandom(range, -range);
+        toReturn.Y = -3461 + FRandom(range, -range);
+        toReturn.Z = -52;
+
 
         return toReturn;
     }

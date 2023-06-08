@@ -58,6 +58,7 @@ defmodule DoomSupervisor.GameServer do
 
   def start_game(opts \\ []) do
     GenServer.call(@name, {:start_game, opts})
+    |> IO.inspect(label: "start_game")
   end
 
   @doc """
@@ -74,7 +75,9 @@ defmodule DoomSupervisor.GameServer do
   def spawn_monster(monster, pid) when is_pid(pid), do: spawn_monster(monster, inspect(pid))
 
   def spawn_monster(monster, identifier) do
-    payload = Actions.spawn_monster(monster, identifier)
+    payload =
+      Actions.spawn_monster(monster, identifier)
+      |> IO.inspect(label: "spawn_monster")
 
     GenServer.call(@name, {:send_netevent, payload})
   end
@@ -148,9 +151,13 @@ defmodule DoomSupervisor.GameServer do
 
   @impl true
   def handle_call({:start_game, opts}, _from, state) do
-    port = GameStarter.call(opts)
+    udp_port = :rand.uniform(10000) + 10000
 
-    {:reply, :ok, %{state | port: port, started: true}}
+    port =
+      GameStarter.call([{:udp_port, udp_port} | opts])
+      |> IO.inspect(label: "started")
+
+    {:reply, :ok, %{state | port: port, started: true, udp_port: udp_port}}
   end
 
   @impl true
@@ -202,7 +209,7 @@ defmodule DoomSupervisor.GameServer do
   end
 
   @impl true
-  def handle_info({port, {:data, @prefix <> data}}, %{port: port} = state) do
+  def handle_info({port, {:data, {:eol, @prefix <> data}}}, %{port: port} = state) do
     Logger.info("************* #{data}")
 
     state =
@@ -215,7 +222,7 @@ defmodule DoomSupervisor.GameServer do
 
   @impl true
   def handle_info({port, {:data, data}}, %{port: port} = state) do
-    Logger.info(data)
+    Logger.info(inspect(data))
 
     {:noreply, state}
   end
