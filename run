@@ -1,0 +1,3 @@
+#!/bin/bash
+killall gzdoom
+iex -S mix phx.server -e 'DoomSupervisor.GameServer.start_game(keep_corpses: true)'
