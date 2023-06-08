@@ -31,9 +31,6 @@ defmodule DoomSupervisor.Actions do
     def to_payload(_), do: @___
   end
 
-  @padding "\0"
-  @payload_length 50
-
   @monsters [
     cacodemon: "Cacodemon",
     demon: "Demon",
@@ -83,7 +80,6 @@ defmodule DoomSupervisor.Actions do
 
     [action, monster, identifier, position]
     |> Enum.join(":")
-    |> String.pad_trailing(@payload_length, @padding)
   end
 
   def allowed_monsters, do: @allowed_monsters
