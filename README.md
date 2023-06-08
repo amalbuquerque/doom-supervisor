@@ -1,8 +1,8 @@
 # DoomSupervisor Linux Clone
 
-This is a clone of https://github.com/amalbuquerque/ great talk and presentation. It includes fixes to make it run on linux and adds commits to gzdoom that I think he missed pushing: https://github.com/dominicletz/gzdoom
+This is a clone of https://github.com/amalbuquerque/ 's great talk and presentation. It includes fixes to make it run on linux and adds commits to gzdoom that I think he missed pushing: https://github.com/dominicletz/gzdoom
 
-My Copy of his slides that I presented in the Berlin Elixir Meetup on June 8th you can find here:
+My copy of his slides that I presented in the Berlin Elixir Meetup on June 8th you can find here:
 
 https://docs.google.com/presentation/d/1vzB8-pmvuJcUC-wD35Q15gPJNmXPZgQDnR7ZCGRQfek/edit#slide=id.p
 
