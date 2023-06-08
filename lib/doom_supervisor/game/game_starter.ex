@@ -10,11 +10,7 @@ defmodule DoomSupervisor.GameStarter do
 
   # Three ways to locate the gzdoom (get it from zdoom.org) binary:
   defp game_binary_path() do
-    System.get_env("DOOM") || System.find_executable("zandronum-server") || Path.join([System.user_home!(), "zandronum", "zandronum-server"])
-  end
-
-  defp game_client_binary_path() do
-    String.replace_suffix(game_binary_path(), "-server", "")
+    System.get_env("GZDOOM") || System.find_executable("gzdoom") || raise "Couldn't find gzdoom"
   end
 
   defp base_dir() do
@@ -24,7 +20,8 @@ defmodule DoomSupervisor.GameStarter do
 
   defp game_params() do
     [
-      "-stdout",
+      "-host",
+      "1",
       "-deathmatch",
       "+developer",
       "1",
@@ -54,23 +51,18 @@ defmodule DoomSupervisor.GameStarter do
   @spec call(Keyword.t()) :: port()
   def call(opts) do
     game_params = game_params() ++ extra_params(opts)
-    server_params = game_params ++ ["-host", "2"]
-    client_params = ["-connect", "127.0.0.1:#{Keyword.get(opts, :udp_port, 10666)}"]
 
-    server = case stdbuf_path() do
+    case stdbuf_path() do
       nil ->
-        Port.open({:spawn_executable, game_binary_path()}, [:binary, :line, args: server_params])
+        Port.open({:spawn_executable, game_binary_path()}, [:binary, :line, args: game_params])
 
       stdbuf ->
         Port.open({:spawn_executable, stdbuf}, [
           :binary,
           :line,
-          args: ["-oL", game_binary_path() | server_params]
+          args: ["-oL", game_binary_path() | game_params]
         ])
     end
-
-    _client = Port.open({:spawn_executable, game_client_binary_path()}, [:binary, :line, args: client_params])
-    server
   end
 
   defp extra_params([]), do: []

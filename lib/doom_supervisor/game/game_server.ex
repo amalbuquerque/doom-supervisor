@@ -75,8 +75,9 @@ defmodule DoomSupervisor.GameServer do
   def spawn_monster(monster, pid) when is_pid(pid), do: spawn_monster(monster, inspect(pid))
 
   def spawn_monster(monster, identifier) do
-    payload = Actions.spawn_monster(monster, identifier)
-    |> IO.inspect(label: "spawn_monster")
+    payload =
+      Actions.spawn_monster(monster, identifier)
+      |> IO.inspect(label: "spawn_monster")
 
     GenServer.call(@name, {:send_netevent, payload})
   end
@@ -165,10 +166,8 @@ defmodule DoomSupervisor.GameServer do
   end
 
   @impl true
-  def handle_call({:send_netevent, payload}, _from, %{started: true, port: port} = state) do
-    IO.inspect(payload, label: "payload")
-    send(port, {self(), {:command, "netevent \"#{payload}\"\n"}})
-    # Netevent.send_netevent(payload, @localhost, udp_port)
+  def handle_call({:send_netevent, payload}, _from, %{started: true, udp_port: udp_port} = state) do
+    Netevent.send_netevent(payload, @localhost, udp_port)
 
     {:reply, :ok, state}
   end
